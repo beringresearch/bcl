@@ -1,0 +1,11 @@
+base	alpine/edge/amd64;
+
+packages {
+	manager		apk;
+	system		bash gcc python3;
+}
+
+run {
+	command		python3 -m ensurepip;
+	command		pip3 --no-cache-dir install --upgrade pip setuptools;
+}
