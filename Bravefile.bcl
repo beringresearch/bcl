@@ -1,11 +1,43 @@
-base	alpine/edge/amd64;
+base:				"alpine/edge/amd64"
+name:				"alpine"
+version:			"1.0"
 
-packages {
-	manager		apk;
-	system		bash gcc python3;
+// This is a comment
+
+system {
+    apk: 			["bash", "python3"]
+}
+
+copy {
+	source: 	 	"/source/dir/or/file1"
+	destination: 	"/destination/dir/or/file1"
+	action: 	 	"chmod 0755"
+
+	source: 	 	"/source/dir/or/file2"
+	destination: 	"/destination/dir/or/file2"
+	action: 	 	"chmod 0755"
 }
 
 run {
-	command		python3 -m ensurepip;
-	command		pip3 --no-cache-dir install --upgrade pip setuptools;
+	command:		"python3 -m ensurepip"
+	command:		"pip3 --no-cache-dir install --upgrade pip setuptools"
+}
+
+service {
+	ip: 			"10.0.0.1"
+	port: 			"8008:8008"
+	ram: 			"4Gb"
+	cpu: 			2
+}
+
+deploy {
+	
+	host {
+		ip: "123.456.789"
+	}
+
+	host {
+		ip: "987.654.321"
+	}
+
 }
