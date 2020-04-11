@@ -11,6 +11,7 @@ BCL is a simplified configuration script for Bravetools Images. It supports
 
 # Example
 ``` bash
+go get
 go run main.go Bravefile.bcl
 brave build Bravefile
 ```
@@ -19,6 +20,7 @@ brave build Bravefile
 ```bash
 git clone https://github.com/beringresearch/bcl
 cd bcl
+go get
 go build
 cp bcl /usr/local/bin
 
