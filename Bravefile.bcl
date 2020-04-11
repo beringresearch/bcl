@@ -3,15 +3,11 @@ base {
 	location: 		"public"
 }
 
-
-// This is a comment
-
 system {
     apk: 			["bash", "python3"]
 }
 
 copy {
-
 	Bravefile {
 	source:			"Bravefile.bcl"
 	target: 		"/root/Bravefile.bcl"
@@ -23,7 +19,7 @@ copy {
 	target: 		"/root/Bravefile"
 	action: 	 	"chmod 0700 /root/Bravefile"
 	}
-	
+
 }
 
 run {
