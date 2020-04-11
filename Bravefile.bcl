@@ -1,6 +1,8 @@
-base:				"alpine/edge/amd64"
-name:				"alpine"
-version:			"1.0"
+base {
+	image: 			"alpine/edge/amd64"
+	location: 		"public"
+}
+
 
 // This is a comment
 
@@ -9,35 +11,46 @@ system {
 }
 
 copy {
-	source: 	 	"/source/dir/or/file1"
-	destination: 	"/destination/dir/or/file1"
-	action: 	 	"chmod 0755"
 
-	source: 	 	"/source/dir/or/file2"
-	destination: 	"/destination/dir/or/file2"
-	action: 	 	"chmod 0755"
+	Bravefile {
+	source:			"Bravefile.bcl"
+	target: 		"/root/Bravefile.bcl"
+	action: 	 	"chmod 0700 /root/Bravefile.bcl"
+	}
+
+	Bravefile {
+	source:			"Bravefile"
+	target: 		"/root/Bravefile"
+	action: 	 	"chmod 0700 /root/Bravefile"
+	}
+	
 }
 
 run {
-	command:		"python3 -m ensurepip"
-	command:		"pip3 --no-cache-dir install --upgrade pip setuptools"
+	python3: 		"-m ensurepip"
+	pip3: 			"--no-cache-dir install --upgrade pip setuptools"
 }
 
 service {
+	name:			"alpine"
+	version:		"1.0"
 	ip: 			"10.0.0.1"
-	port: 			"8008:8008"
-	ram: 			"4Gb"
-	cpu: 			2
+//	ports: 			"8008:8008"
+	resources {
+		ram: 		"4GB"
+		cpu: 		2
+//		gpu:		true
+	}
 }
 
-deploy {
-	
-	host {
-		ip: "123.456.789"
-	}
-
-	host {
-		ip: "987.654.321"
-	}
-
-}
+//deploy {
+//	
+//	host {
+//		ip: "123.456.789"
+//	}
+//
+//	host {
+//		ip: "987.654.321"
+//	}
+//
+//}

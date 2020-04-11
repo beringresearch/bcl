@@ -1,0 +1,36 @@
+base:
+  image: alpine/edge/amd64
+  location: public
+packages:
+  manager: apk
+  system:
+  - bash
+  - python3
+run:
+- command: python3
+  args:
+  - -m
+  - ensurepip
+- command: pip3
+  args:
+  - --no-cache-dir
+  - install
+  - --upgrade
+  - pip
+  - setuptools
+copy:
+- source: Bravefile.bcl
+  target: /root/Bravefile.bcl
+  action: chmod 0700 /root/Bravefile.bcl
+- source: Bravefile
+  target: /root/Bravefile
+  action: chmod 0700 /root/Bravefile
+service:
+  name: alpine
+  version: "1.0"
+  ip: 10.0.0.1
+  ports: []
+  resources:
+    ram: 4GB
+    cpu: 2
+    gpu: false
