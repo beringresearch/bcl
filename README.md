@@ -12,11 +12,11 @@ BCL is a simplified configuration script for Bravetools Images. It supports
 # Building from source
 
 ```bash
-git clone https://github.com/beringresearch/bcl
-cd bcl
-go get
-go build
-cp bcl /usr/local/bin
+$ git clone https://github.com/beringresearch/bcl
+$ cd bcl
+$ go get
+$ go build
+$ cp bcl /usr/local/bin
 ```
 
 # Examples
@@ -24,7 +24,7 @@ cp bcl /usr/local/bin
 ## Generate BCL template file
 
 ```bash
-bcl
+$ bcl
 
 //BCL File example
 base {
@@ -63,13 +63,13 @@ service {
 To save output into a file, simply pipe it.
 
 ```bash
-bcl > Bravefile.bcl
+$ bcl > Bravefile.bcl
 ```
 
 ## Convert BCL file to Bravefile
 
-```
-bcl Bravefile.bcl
+``` bash
+$ bcl Bravefile.bcl
 ```
 
 The output will generate a `Bravefile` in the working directory.
