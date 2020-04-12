@@ -150,8 +150,7 @@ func Parse(file *Config) (*validate.Bravefile, error) {
 				runCommand.Command = block.Key
 				if block.Value.String == nil {
 					arg := getStringArray(block.Value.Array)
-					str := strings.Join(arg[:], " ")
-					runCommand.Args = []string{str}
+					runCommand.Args = arg
 				} else {
 					if strings.Contains(*block.Value.String, "\n") {
 						runCommand.Args = []string{*block.Value.String}
