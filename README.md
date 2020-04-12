@@ -1,72 +1,153 @@
 # Bering Configuration Language
 
-BCL is a simplified configuration script for Bravetools Images. It supports
+BCL is a simplified configuration script for Bravetools Images.
 
-* Comments
-* Strings
-* Integers
-* Floats
-* Boolean
-* Arrays
+<!-- TOC -->
+1. [Installation](#isntallation)
+2. [Grammar](#grammar)
+3. [Features](#features)
+4. [Data Types](#datatypes)
+5. [Usage](#usage)
+<!-- /TOC -->
 
-# Building from source
+<a id="markdown-installation" name="installation"></a>
+## Installation
 
 ```bash
-$ git clone https://github.com/beringresearch/bcl
-$ cd bcl
-$ go get
-$ go build
-$ cp bcl /usr/local/bin
+git clone https://github.com/beringresearch/bcl
+cd bcl
+go get
+go build
+cp bcl /usr/local/bin
 ```
+<a id="markdown-grammar" name="grammar"></a>
+## Grammar
 
-# Examples
+The minimal structural unit of BCL is an **Entry**. Each **Entry** is comprised of functional __Blocks__.
+BCL supports five entry types:
 
-## Generate BCL template file
-
-```bash
-$ bcl
-
-//BCL File example
+* **base** - describes base requirements for your image, such as base image and location of the image file.
+```python
 base {
-	image: 		""
-	location: 	""
+  image: 	"alpine/edge/amd64"
+  location:     "public"
 }
+```
 
+* **system** - describes system packages to be installed through a specified package manager.
+Supported package managers are `atp` and `apk.
+`
+```python
+// Install bash and python3 using apk manager
 system {
-    apt: 		["bash", "python3"]
+    apk:  ["bash", "python3"]
 }
+```
 
+* **copy** - is specialised entity designed for file and directory transfers between hosts and Brave Images.
+The Entity supports multible Blocks. Each Block must be prefaced with a `key`(e.g. `Bravefile {...}`) and
+contain a `source` and a `target`. Optionally, `action` specifies additional actions to perform once the file
+or directory has been copied to the image. All actions are executed on an image during build. 
+
+```python
 copy {
-	FileName {
-	source:		"/file/or/directory"
-	target: 	"/file/or/directory"
-	action: 	 "chmod 0700 /file/or/directory"
+	Bravefile {
+	source:			"Bravefile.bcl"
+	target: 		"/root/Bravefile.bcl"
+	action: 	 	"chmod 0700 /root/Bravefile.bcl"
 	}
-}
 
+	Bravefile {
+	source:			"Bravefile"
+	target: 		"/root/Bravefile"
+	action: 	 	"chmod 0700 /root/Bravefile"
+	}
+
+}
+```
+* **run** - executes commands on the Brave image during build time. This Entity supports multiple Blocks and a diverse range of syntax.
+In its simplest embodiment, `run` Entity supports command, followed by an argument string. For example,
+
+```python
 run {
-	echo: 		"Hello World"
+  git: "clone https://github.com/beringresearch/bcl"
 }
+```
+Complex strings are passed as Arrays.
+```python
+run {
+  echo: ["\"clone https://github.com/beringresearch/bcl\""]
+}
+```
 
-service {
-	name:		""
-	version:	"1.0"
-	ip: 		""
+This will print an output:
+```bash
+$ echo "clone https://github.com/beringresearch/bcl"
+$ clone https://github.com/beringresearch/bcl
+```
+It is also possible to use Arrays to pass multiple complex commands.
+
+```python
+run {
+  bash: ["-c", "curl -sL https://bootstrap.pypa.io/get-pip.py | sudo -E python3.6"]
+}
+```
+
+Multi-line strings are also supported:
+
+```pythopn
+run {
+  echo: `\" This will generate a
+multiline outout
+to the terminal\"` 
+}
+```
+
+
+* **service** - controls image properties, such as name, version, and run-time configuration.
+
+```python
+`service {
+	name:			"alpine"
+	version:		"1.0"
+	ip: 			"10.0.0.1"
+	ports: 			"8008:8008"
 	resources {
-		ram: 	"4GB"
-		cpu: 	2
-		gpu:	false
+		ram: 		"4GB"
+		cpu: 		2
+		gpu:		true
 	}
 }
 ```
 
-To save output into a file, simply pipe it.
+<a id="markdown-features" name="features"></a>
+## Features
 
-```bash
-$ bcl > Bravefile.bcl
+### Readability
+BCL parser supports arbitrary TAB and SPACE placements. This can greatly improve readability:
+
+```python
+system {
+    apk:  ["bash", "python3",
+           "htop", "curl"]
+}
 ```
 
-## Convert BCL file to Bravefile
+### Comments
+Comments are designated as `//` and are natively supported by the BCL parser.
+
+```python
+// This entire block will be ignored
+//system {
+//    apk: ["bash", "python3",
+//          "htop", "curl"]
+//}
+```
+
+<a id="markdown-usage" name="usage"></a>
+## Usage 
+
+Assuming that you have generated a BCL file `Bravefile.bcl`, to convert it to a conventional `Bravefile` run:
 
 ``` bash
 $ bcl Bravefile.bcl
