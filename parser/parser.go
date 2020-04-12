@@ -148,10 +148,16 @@ func Parse(file *Config) (*validate.Bravefile, error) {
 			var runCommand validate.RunCommand
 			for _, block := range entry.Block.Entries {
 				runCommand.Command = block.Key
-				if strings.Contains(*block.Value.String, "\n") {
-					runCommand.Args = []string{*block.Value.String}
+				if block.Value.String == nil {
+					arg := getStringArray(block.Value.Array)
+					str := strings.Join(arg[:], " ")
+					runCommand.Args = []string{str}
 				} else {
-					runCommand.Args = strings.Split(*block.Value.String, " ")
+					if strings.Contains(*block.Value.String, "\n") {
+						runCommand.Args = []string{*block.Value.String}
+					} else {
+						runCommand.Args = strings.Split(*block.Value.String, " ")
+					}
 				}
 
 				runCommandArray = append(runCommandArray, runCommand)
@@ -188,6 +194,9 @@ func Parse(file *Config) (*validate.Bravefile, error) {
 				}
 			}
 			bravefile.PlatformService = service
+
+		default:
+			return nil, errors.New("Unsupported Entury key " + entry.Key)
 		}
 	}
 	return bravefile, nil

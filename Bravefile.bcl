@@ -25,6 +25,7 @@ copy {
 run {
 	python3: 		"-m ensurepip"
 	pip3: 			"--no-cache-dir install --upgrade pip setuptools"
+  	sed: [			"-i 's#logfile /var/log/redis/redis.log#logfile \"\"#i' /etc/redis.conf"]
 }
 
 service {

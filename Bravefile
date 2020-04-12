@@ -18,6 +18,9 @@ run:
   - --upgrade
   - pip
   - setuptools
+- command: sed
+  args:
+  - -i 's#logfile /var/log/redis/redis.log#logfile ""#i' /etc/redis.conf
 copy:
 - source: Bravefile.bcl
   target: /root/Bravefile.bcl
