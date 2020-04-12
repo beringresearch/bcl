@@ -195,7 +195,7 @@ func Parse(file *Config) (*validate.Bravefile, error) {
 			bravefile.PlatformService = service
 
 		default:
-			return nil, errors.New("Unsupported Entury key " + entry.Key)
+			return nil, errors.New("Unsupported Entry key " + entry.Key)
 		}
 	}
 	return bravefile, nil
