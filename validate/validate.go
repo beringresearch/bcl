@@ -32,9 +32,9 @@ type Service struct {
 	Name       string     `yaml:"name,omitempty"`
 	Docker     string     `yaml:"docker,omitempty"`
 	Version    string     `yaml:"version,omitempty"`
-	IP         string     `yaml:"ip"`
-	Ports      []string   `yaml:"ports"`
-	Resources  Resources  `yaml:"resources"`
+	IP         string     `yaml:"ip,omitempty"`
+	Ports      []string   `yaml:"ports,omitempty"`
+	Resources  Resources  `yaml:"resources,omitempty"`
 	Postdeploy Postdeploy `yaml:"postdeploy,omitempty"`
 }
 

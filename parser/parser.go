@@ -3,7 +3,8 @@ package parser
 import (
 	"errors"
 	"fmt"
-	"github.com/beringresearch/bcl/participle"
+
+	"github.com/alecthomas/participle/v2"
 	"github.com/beringresearch/bcl/validate"
 	"strings"
 )
@@ -73,13 +74,9 @@ func NewConfig() *Config {
 // Scan accepts a string and applies a lexer
 func Scan(file string) (*Config, error) {
 	expr := &Config{}
-	parser, err := participle.Build(&Config{})
+	parser := participle.MustBuild(&Config{}, participle.Unquote())
 
-	if err != nil {
-		return &Config{}, err
-	}
-
-	err = parser.ParseString(file, expr)
+	err := parser.ParseString("", file, expr)
 	if err != nil {
 		return &Config{}, err
 	}
@@ -200,18 +197,22 @@ func parseRunBlock(entry *Entry) ([]validate.RunCommand, error) {
 	var runCommandArray []validate.RunCommand
 
 	for _, block := range entry.Block.Entries {
-		runCommand.Command = block.Key
+		runCommand.Command = "sh"
 		var arg []string
 
 		if block.Value.Array != nil {
 			arg = getStringArray(block.Value.Array)
+
 			runCommand.Args = arg
 		} else {
 			argString := *block.Value.String
 			if strings.Contains(argString, "\n") {
 				argString = strings.Replace(argString, "\n", " ", -1)
 			}
-			arg = strings.Split(argString, " ")
+
+			argString = "-c[DLM]" + block.Key + " " + argString
+			arg = strings.Split(argString, "[DLM]")
+
 			runCommand.Args = arg
 		}
 
