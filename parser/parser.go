@@ -202,8 +202,7 @@ func parseRunBlock(entry *Entry) ([]validate.RunCommand, error) {
 
 		if block.Value.Array != nil {
 			arg = getStringArray(block.Value.Array)
-
-			runCommand.Args = arg
+			runCommand.Args = append([]string{"-c", block.Key}, arg...)
 		} else {
 			argString := *block.Value.String
 			if strings.Contains(argString, "\n") {
