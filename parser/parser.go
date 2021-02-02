@@ -18,7 +18,7 @@ func (b *Bool) Capture(v []string) error { *b = v[0] == "true"; return nil }
 // Value structure
 type Value struct {
 	Boolean    *Bool    `  @("true"|"false")`
-	Identifier *string  `| @Ident { @"." @Ident }`
+	Identifier *string  `| @Ident ( @"." @Ident )*`
 	String     *string  `| @(String|Char|RawString)`
 	Integer    *int64   `| @(Int)`
 	Float      *float64 `| @(Float)`
@@ -31,7 +31,7 @@ func (l *Value) GoString() string {
 	case l.Boolean != nil:
 		return fmt.Sprintf("%v", *l.Boolean)
 	case l.Identifier != nil:
-		return fmt.Sprintf("`%s`", *l.Identifier)
+		return fmt.Sprintf("%s", *l.Identifier)
 	case l.String != nil:
 		return fmt.Sprintf("%q", *l.String)
 	case l.Integer != nil:
@@ -52,7 +52,7 @@ func (l *Value) GoString() string {
 type Entry struct {
 	Key   string `@Ident`
 	Value *Value `( ":" @@`
-	Block *Block `| @@)`
+	Block *Block `  | @@ )`
 }
 
 // Block is BCL's minimal functioning structure
@@ -208,7 +208,7 @@ func parseRunBlock(entry *Entry) ([]validate.RunCommand, error) {
 			if strings.Contains(argString, "\n") {
 				argString = strings.Replace(argString, "\n", " ", -1)
 			}
-
+			argString = strings.Replace(argString, "`", "", -1)
 			argString = "-c[DLM]" + block.Key + " " + argString
 			arg = strings.Split(argString, "[DLM]")
 
