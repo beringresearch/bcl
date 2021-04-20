@@ -205,9 +205,9 @@ func parseRunBlock(entry *Entry) ([]validate.RunCommand, error) {
 			runCommand.Args = append([]string{"-c", block.Key}, arg...)
 		} else {
 			argString := *block.Value.String
-			if strings.Contains(argString, "\n") {
-				argString = strings.Replace(argString, "\n", " ", -1)
-			}
+			//if strings.Contains(argString, "\n") {
+			//	argString = strings.Replace(argString, "\n", " ", -1)
+			//}
 			argString = strings.Replace(argString, "`", "", -1)
 			argString = "-c[DLM]" + block.Key + " " + argString
 			arg = strings.Split(argString, "[DLM]")
