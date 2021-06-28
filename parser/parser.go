@@ -50,7 +50,7 @@ func (l *Value) GoString() string {
 
 // Entry is a BCL minimal functioning unit
 type Entry struct {
-	Key   string `@Ident`
+	Key   string `@Ident { @"-" @Ident }`
 	Value *Value `( ":" @@`
 	Block *Block `  | @@ )`
 }
