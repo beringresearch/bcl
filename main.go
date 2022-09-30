@@ -14,6 +14,9 @@ import (
 func main() {
 
 	example := `//BCL File example
+image {
+	name: ""
+}
 base {
 	image: 		""
 	location: 	""
@@ -39,7 +42,9 @@ service {
 	image: ""
 	docker: "no"	
 	name:		""
-	version:	"1.0"
+	profile: 	""
+	network:	""
+	storage:	""
 	ip: 		""
 	ports:		""
 	postdeploy {

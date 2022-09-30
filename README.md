@@ -28,6 +28,9 @@ BCL supports five entry types:
 
 * **base** - describes base requirements for your image, such as base image and location of the image file.
 ```python
+image {
+	name: "alpine/edge/amd64"
+}
 base {
   image: 	"alpine/edge/amd64"
   location:     "public"

@@ -19,7 +19,7 @@ type RunCommand struct {
 	Args    []string `yaml:"args,omitempty"`
 }
 
-//CopyCommand defines source and target for files to be copied into container
+// CopyCommand defines source and target for files to be copied into container
 type CopyCommand struct {
 	Source string `yaml:"source,omitempty"`
 	Target string `yaml:"target,omitempty"`
@@ -30,8 +30,10 @@ type CopyCommand struct {
 type Service struct {
 	Image      string     `yaml:"image,omitempty"`
 	Name       string     `yaml:"name,omitempty"`
+	Profile    string     `yaml:"profile,omitempty"`
+	Network    string     `yaml:"network,omitempty"`
+	Storage    string     `yaml:"storage,omitempty"`
 	Docker     string     `yaml:"docker,omitempty"`
-	Version    string     `yaml:"version,omitempty"`
 	IP         string     `yaml:"ip,omitempty"`
 	Ports      []string   `yaml:"ports,omitempty"`
 	Resources  Resources  `yaml:"resources,omitempty"`
@@ -53,6 +55,7 @@ type Resources struct {
 
 // Bravefile describes unit configuration
 type Bravefile struct {
+	Image           string           `yaml:"image,omitempty"`
 	Base            ImageDescription `yaml:"base"`
 	SystemPackages  Packages         `yaml:"packages,omitempty"`
 	Run             []RunCommand     `yaml:"run,omitempty"`

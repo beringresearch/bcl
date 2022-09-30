@@ -4,9 +4,10 @@ import (
 	"errors"
 	"fmt"
 
+	"strings"
+
 	"github.com/alecthomas/participle/v2"
 	"github.com/beringresearch/bcl/validate"
-	"strings"
 )
 
 // Bool value
@@ -94,6 +95,15 @@ func Parse(file *Config) (*validate.Bravefile, error) {
 
 	for _, entry := range file.Entries {
 		switch entry.Key {
+		case "image":
+			for _, block := range entry.Block.Entries {
+				if block.Key == "name" {
+					bravefile.Image = *block.Value.String
+				} else {
+					return nil, errors.New("unsupported base key " + block.Key)
+				}
+			}
+
 		case "base":
 			for _, block := range entry.Block.Entries {
 				if block.Key == "location" {
@@ -101,17 +111,17 @@ func Parse(file *Config) (*validate.Bravefile, error) {
 				} else if block.Key == "image" {
 					imageDescription.Image = *block.Value.String
 				} else {
-					return nil, errors.New("Unsupported base key " + block.Key)
+					return nil, errors.New("unsupported base key " + block.Key)
 				}
 				bravefile.Base = imageDescription
 			}
 
 		case "system":
 			if len(entry.Block.Entries) > 1 {
-				return nil, errors.New("To many blocks in the system entry")
+				return nil, errors.New("to many blocks in the system entry")
 			}
 			if !stringInSlice(entry.Block.Entries[0].Key, []string{"apt", "apk"}) {
-				return nil, errors.New("Unsupported package manager <" + entry.Block.Entries[0].Key + ">. Only <apt> and <apk> are supported")
+				return nil, errors.New("unsupported package manager <" + entry.Block.Entries[0].Key + ">. Only <apt> and <apk> are supported")
 			}
 
 			packages.Manager = entry.Block.Entries[0].Key
@@ -138,10 +148,14 @@ func Parse(file *Config) (*validate.Bravefile, error) {
 					service.Image = *block.Value.String
 				} else if block.Key == "name" {
 					service.Name = *block.Value.String
+				} else if block.Key == "profile" {
+					service.Profile = *block.Value.String
+				} else if block.Key == "network" {
+					service.Network = *block.Value.String
+				} else if block.Key == "storage" {
+					service.Storage = *block.Value.String
 				} else if block.Key == "docker" {
 					service.Docker = *block.Value.String
-				} else if block.Key == "version" {
-					service.Version = *block.Value.String
 				} else if block.Key == "ip" {
 					service.IP = *block.Value.String
 				} else if block.Key == "ports" {
